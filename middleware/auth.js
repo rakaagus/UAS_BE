@@ -8,7 +8,10 @@ class AuthMiddleware{
         const token = req.headers.authorization?.split(' ')[1]; // Format: "Bearer <token>"
     
         if (!token) {
-            return res.status(401).json({ message: 'Access denied. No token provided.' });
+            return res.status(401).json({ 
+                message: 'Access denied. No token provided.',
+                error: true,
+            });
         }
     
         try {
@@ -16,7 +19,10 @@ class AuthMiddleware{
             req.user = decoded; // Tambahkan data user ke request
             next();
         } catch (error) {
-            res.status(401).json({ message: 'Invalid or expired token' });
+            res.status(401).json({ 
+                message: 'Invalid or expired token',
+                error: true,
+            });
         }
     };
 }

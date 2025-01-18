@@ -4,9 +4,13 @@ class CategoryController {
     async index(req, res) {
         try {
             const categories = await prisma.category.findMany();
-            res.status(200).json(categories);
+            res.status(200).json({
+                message: "Get All Resource",
+                error: false,
+                data: categories,
+            });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: true, message: error.message });
         }
     }
 
@@ -15,11 +19,18 @@ class CategoryController {
         try {
             const category = await prisma.category.findUnique({ where: { id: parseInt(id) } });
             if (!category) {
-                return res.status(404).json({ message: 'Category not found' });
+                return res.status(404).json({
+                    message: 'Category not found', 
+                    error: true
+                });
             }
-            res.status(200).json(category);
+            res.status(200).json({
+                message: "Get Detail Resource",
+                error: false,
+                data: category
+            });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: true, message: error.message });
         }
     }
 
@@ -29,9 +40,13 @@ class CategoryController {
             const newCategory = await prisma.category.create({
                 data: { name },
             });
-            res.status(201).json(newCategory);
+            res.status(201).json({
+                message: "Reource is Added successfully",
+                error: false,
+                data: newCategory,
+            });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: true, message: error.message });
         }
     }
 
@@ -43,9 +58,13 @@ class CategoryController {
                 where: { id: parseInt(id) },
                 data: { name },
             });
-            res.status(200).json(updatedCategory);
+            res.status(200).json({
+                message: "Reource is Update successfully",
+                error: false,
+                data: updatedCategory,
+            });
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: true, message: error.message });
         }
     }
 
@@ -53,7 +72,10 @@ class CategoryController {
         const { id } = req.params;
         try {
             await prisma.category.delete({ where: { id: parseInt(id) } });
-            res.status(200).json({ message: 'Category deleted successfully' });
+            res.status(200).json({
+                message: 'Category deleted successfully',
+                error: false
+            });
         } catch (error) {
             res.status(500).json({ error: error.message });
         }
